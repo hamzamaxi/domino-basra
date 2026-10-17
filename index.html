@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08161a">
+<meta name="description" content="سجل نقاط الدومنة بين فريقين، بأسماء وشعارات بصرية.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="دومنة البصرة">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2308161a'/><rect x='20' y='6' width='24' height='52' rx='5' fill='%23e3b24f'/><rect x='22' y='31' width='20' height='2' fill='%2308161a'/><circle cx='32' cy='18' r='4' fill='%2308161a'/><circle cx='27' cy='42' r='3.4' fill='%2308161a'/><circle cx='37' cy='48' r='3.4' fill='%2308161a'/></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2308161a'/><rect x='20' y='6' width='24' height='52' rx='5' fill='%23e3b24f'/><rect x='22' y='31' width='20' height='2' fill='%2308161a'/><circle cx='32' cy='18' r='4' fill='%2308161a'/><circle cx='27' cy='42' r='3.4' fill='%2308161a'/><circle cx='37' cy='48' r='3.4' fill='%2308161a'/></svg>">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+<title>دومنة البصرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;600;700&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: one-screen app; Basra night on the Shatt — deep teal water, date-gold accent, shanasheel wood. Dark by design. */
+:root{
+  --bg:#08161a; --bg-2:#0d2026; --surface:#112a31; --surface-2:#173740; --line:#21444d;
+  --fg:#f5ecdb; --muted:#93aca7; --gold:#e3b24f; --gold-2:#f7d68f; --wood:#7a4a2a; --danger:#e2634c; --ok:#4fbf7a;
+  --font-display:'Reem Kufi','Tajawal',system-ui,sans-serif;
+  --font-body:'Tajawal',system-ui,'Segoe UI',Tahoma,sans-serif;
+  --r-lg:26px; --r-md:18px; --r-sm:12px;
+  --ease:cubic-bezier(.2,.8,.2,1); --spring:cubic-bezier(.34,1.56,.64,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 85% -10%, #1d4a52 0%, transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, #3a2a17 0%, transparent 60%),
+    radial-gradient(circle, #ffffff0d 1.5px, transparent 1.6px) 0 0/28px 28px,
+    var(--bg);}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select{font:inherit;color:var(--fg)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+svg{display:block}
+
+#app{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:14px 32px;min-height:100%}
+.screen{display:none}
+.screen.active{display:block;animation:screenIn .55s var(--ease) both}
+@keyframes screenIn{from{opacity:0;transform:translateY(18px) scale(.985);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+
+/* ---------- shared ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 22px;border-radius:16px;font-weight:700;font-size:17px;transition:transform .15s var(--ease),background .2s,box-shadow .2s}
+.btn:active{transform:scale(.96)}
+.btn-gold{background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#2a1a05;box-shadow:0 10px 30px #e3b24f33,inset 0 1px 0 #fff8}
+.btn-ghost{background:var(--surface);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn svg{width:20px;height:20px}
+.icon-btn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);transition:transform .15s,background .2s}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn[aria-pressed="false"]{opacity:.55}
+.eyebrow{font-size:13px;letter-spacing:.04em;color:var(--muted);font-weight:500}
+h1,h2,h3{font-family:var(--font-display);margin:0;text-wrap:balance;font-weight:700}
+
+.badge{--tc:var(--gold);width:56px;aspect-ratio:1;border-radius:30%;display:grid;place-items:center;flex:none;color:#fffaf0;position:relative;
+  background:radial-gradient(circle at 30% 22%,color-mix(in srgb,var(--tc) 80%,#fff 20%),color-mix(in srgb,var(--tc) 70%,#000 30%) 75%);
+  box-shadow:inset 0 1px 0 #ffffff55,inset 0 -6px 14px #0004,0 10px 26px color-mix(in srgb,var(--tc) 40%,transparent)}
+.badge svg{width:62%;height:62%;filter:drop-shadow(0 2px 2px #0005)}
+.badge.xl{width:min(34vw,128px)}
+.badge.lg{width:78px}
+.badge.sm{width:38px;border-radius:28%}
+
+/* ---------- home ---------- */
+.home{display:grid;gap:28px;padding-top:4vh}
+.hero{display:grid;justify-items:center;text-align:center;gap:14px}
+.tiles{display:flex;gap:14px;margin-bottom:8px;perspective:600px}
+.tile{width:58px;height:112px;border-radius:12px;background:linear-gradient(160deg,#fbf4e6,#d9ccb2);box-shadow:0 14px 30px #0008,inset 0 -3px 0 #0002;display:grid;grid-template-rows:1fr 2px 1fr;padding:6px;animation:tileIn 1s var(--spring) both}
+.tile:nth-child(1){--rot:-14deg;animation-delay:.1s}
+.tile:nth-child(2){--rot:6deg;animation-delay:.25s;transform:translateY(-10px)}
+.tile:nth-child(3){--rot:18deg;animation-delay:.4s}
+@keyframes tileIn{from{opacity:0;transform:translateY(-60px) rotateX(70deg) rotate(0)}to{opacity:1;transform:rotate(var(--rot))}}
+.tile .bar{background:#9b8b6c;border-radius:2px;margin:0 4px}
+.half{display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);place-items:center}
+.pip{width:9px;height:9px;border-radius:50%;background:#1d1a14;box-shadow:inset 0 1px 1px #0008}
+.pip.r{background:var(--danger)}
+.title-xl{font-size:clamp(44px,11vw,84px);line-height:1;background:linear-gradient(180deg,var(--gold-2),var(--gold) 60%,#b07a22);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 20px #e3b24f2a)}
+.hero p{margin:0;color:var(--muted);max-width:34ch}
+.home-actions{display:grid;gap:12px;width:min(100%,420px);justify-self:center}
+.resume{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);text-align:start;width:100%}
+.resume .mini{display:flex;align-items:center;gap:8px;font-weight:700}
+.resume .num{font-family:var(--font-display);font-size:26px;font-variant-numeric:tabular-nums}
+.panel{background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px}
+.board-top{width:min(100%,560px);justify-self:center;display:grid;gap:12px}
+.lb-row{display:grid;grid-template-columns:28px auto 1fr auto;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.lb-row:first-of-type{border-top:0}
+.lb-rank{font-family:var(--font-display);color:var(--muted);text-align:center}
+.lb-row:first-of-type .lb-rank{color:var(--gold)}
+.lb-name{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-stat{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.lb-stat b{color:var(--fg);font-size:18px}
+.empty{color:var(--muted);text-align:center;padding:10px 0;margin:0}
+
+/* ---------- setup ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.steps{display:flex;gap:8px;align-items:center}
+.steps i{width:28px;height:6px;border-radius:6px;background:var(--line);transition:background .3s,width .3s var(--ease)}
+.steps i.on{background:var(--gold);width:44px}
+.setup-grid{display:grid;gap:18px}
+.preview{display:flex;align-items:center;gap:16px;padding:18px;border-radius:var(--r-lg);position:relative;overflow:hidden;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--tc) 28%,var(--surface)),var(--surface) 70%);border:1px solid color-mix(in srgb,var(--tc) 40%,var(--line))}
+.preview .badge{transition:transform .4s var(--spring)}
+.preview .badge.pop{animation:pop .45s var(--spring)}
+@keyframes pop{0%{transform:scale(.7) rotate(-10deg)}100%{transform:none}}
+.preview h2{font-size:clamp(26px,6vw,40px);line-height:1.15;word-break:break-word}
+.preview .players{color:var(--muted);font-size:15px}
+.field{display:grid;gap:8px}
+.field>label,.sec-title{font-weight:700;font-size:15px;color:var(--fg)}
+.sec-title{display:flex;justify-content:space-between;align-items:center}
+.sec-title small{color:var(--muted);font-weight:500}
+.input{width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--bg-2);padding:0 16px;font-size:17px;transition:border-color .2s,box-shadow .2s}
+.input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px #e3b24f22}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:15px;transition:all .2s var(--ease)}
+.chip:hover{border-color:var(--gold)}
+.chip.on{background:var(--gold);color:#2a1a05;border-color:var(--gold);font-weight:700}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:10px}
+.icon-opt{display:grid;justify-items:center;gap:6px;padding:10px 4px;border-radius:16px;border:1px solid var(--line);background:var(--surface);transition:transform .2s var(--spring),border-color .2s,background .2s;font-size:13px;color:var(--muted)}
+.icon-opt .badge{width:46px}
+.icon-opt:hover{transform:translateY(-2px)}
+.icon-opt.on{border-color:var(--tc);background:color-mix(in srgb,var(--tc) 18%,var(--surface));color:var(--fg);font-weight:700}
+.icon-opt:disabled,.swatch:disabled{opacity:.25;cursor:not-allowed;transform:none}
+.swatches{display:flex;flex-wrap:wrap;gap:12px}
+.swatch{width:46px;height:46px;border-radius:50%;background:var(--c);border:3px solid transparent;box-shadow:inset 0 -4px 8px #0004;transition:transform .2s var(--spring)}
+.swatch.on{border-color:var(--fg);transform:scale(1.12)}
+.nav-row{display:flex;gap:12px;position:sticky;bottom:0;padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 35%)}
+.nav-row .btn{flex:1}
+.err{color:var(--danger);font-size:14px;min-height:20px;margin:0}
+.targets{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.target{padding:14px 8px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:grid;gap:2px;justify-items:center;transition:all .2s var(--ease)}
+.target b{font-family:var(--font-display);font-size:28px;font-variant-numeric:tabular-nums}
+.target span{font-size:12px;color:var(--muted)}
+.target.on{border-color:var(--gold);background:#e3b24f1f;box-shadow:0 0 0 3px #e3b24f22}
+.versus{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center}
+.versus .side{display:grid;justify-items:center;gap:8px;min-width:0}
+.versus .side b{font-family:var(--font-display);font-size:18px;word-break:break-word}
+.versus .vs{font-family:var(--font-display);font-size:26px;color:var(--gold)}
+.vs-anim .side:first-child{animation:slideL .7s var(--spring) both}
+.vs-anim .side:last-child{animation:slideR .7s var(--spring) both}
+.vs-anim .vs{animation:pop .6s .35s var(--spring) both}
+@keyframes slideL{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+@keyframes slideR{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
+select.input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:18px 24px,24px 24px;background-size:6px 6px;background-repeat:no-repeat}
+
+/* ---------- game ---------- */
+.g-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.g-top .mid{flex:1;text-align:center;min-width:0}
+.g-top .mid b{font-family:var(--font-display);font-size:18px;display:block}
+.g-top .mid span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.game-grid{display:grid;gap:16px}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative}
+.team{--tc:var(--gold);position:relative;border-radius:var(--r-lg);padding:16px 14px;overflow:hidden;display:grid;gap:10px;align-content:start;text-align:center;justify-items:center;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 22%,var(--surface)),var(--surface) 75%);
+  border:1px solid color-mix(in srgb,var(--tc) 35%,var(--line));transition:box-shadow .4s,transform .3s var(--ease)}
+.team::after{content:"";position:absolute;inset:-40% -40% auto auto;width:80%;aspect-ratio:1;background:radial-gradient(circle,color-mix(in srgb,var(--tc) 30%,transparent),transparent 70%);pointer-events:none}
+.team.lead{box-shadow:0 0 0 2px var(--tc),0 18px 50px color-mix(in srgb,var(--tc) 30%,transparent)}
+.team.near{animation:nearGlow 1.6s ease-in-out infinite}
+@keyframes nearGlow{50%{box-shadow:0 0 0 3px var(--tc),0 0 60px color-mix(in srgb,var(--tc) 60%,transparent)}}
+.team .tname{font-family:var(--font-display);font-size:clamp(17px,4.6vw,28px);line-height:1.2;word-break:break-word}
+.team .tplayers{font-size:13px;color:var(--muted);line-height:1.3}
+.score{font-family:var(--font-display);font-size:clamp(60px,17vw,132px);line-height:1;font-variant-numeric:tabular-nums;font-weight:700;letter-spacing:-.02em;text-shadow:0 8px 30px color-mix(in srgb,var(--tc) 45%,transparent)}
+.score.bump{animation:bump .6s var(--spring)}
+@keyframes bump{0%{transform:scale(1)}30%{transform:scale(1.18);color:var(--gold-2)}100%{transform:scale(1)}}
+.need{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.progress{width:100%;height:8px;border-radius:8px;background:#ffffff14;overflow:hidden}
+.progress i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 70%,#fff),var(--tc));transition:width .9s var(--ease)}
+.add-btn{width:100%;min-height:54px;border-radius:16px;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--tc);color:#fff;text-shadow:0 1px 2px #0006;box-shadow:inset 0 1px 0 #fff5,0 8px 22px color-mix(in srgb,var(--tc) 40%,transparent);transition:transform .15s}
+.add-btn:active{transform:scale(.95)}
+.add-btn svg{width:22px;height:22px}
+.crown{position:absolute;top:10px;inset-inline-start:12px;width:30px;color:var(--gold);opacity:0;transform:translateY(-14px) rotate(-20deg);transition:all .5s var(--spring)}
+.team.lead .crown{opacity:1;transform:none}
+.wins{display:flex;gap:5px;justify-content:center;min-height:10px}
+.wins i{width:10px;height:10px;border-radius:50%;background:var(--tc);box-shadow:0 0 8px var(--tc)}
+.float{position:absolute;top:44%;left:50%;font-family:var(--font-display);font-size:44px;font-weight:700;color:var(--gold-2);pointer-events:none;text-shadow:0 4px 18px #000a;animation:floatUp 1.3s var(--ease) forwards;z-index:3}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,20px) scale(.6)}20%{opacity:1;transform:translate(-50%,0) scale(1.15)}100%{opacity:0;transform:translate(-50%,-110px) scale(1)}}
+.vs-chip{position:absolute;top:96px;left:50%;transform:translateX(-50%);z-index:2;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:2px solid var(--line);font-family:var(--font-display);color:var(--gold);font-size:15px}
+.strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.starter{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:start}
+.starter .dot{width:10px;height:10px;border-radius:50%;background:var(--tc,var(--gold));box-shadow:0 0 0 4px color-mix(in srgb,var(--tc,var(--gold)) 25%,transparent);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px transparent}}
+.starter small{color:var(--muted);display:block;font-size:12px}
+.starter b{font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:12px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:center}
+.stat b{display:block;font-family:var(--font-display);font-size:22px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.log{display:grid;gap:0}
+.log-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.log-head h3{font-size:18px}
+.log-list{list-style:none;margin:0;padding:0;max-height:none}
+.log-item{display:grid;grid-template-columns:34px auto 1fr auto;align-items:center;gap:10px;padding:10px 4px;border-top:1px solid var(--line);animation:logIn .5s var(--ease) both}
+.log-item:first-child{border-top:0}
+@keyframes logIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.log-item .rn{font-family:var(--font-display);color:var(--muted);text-align:center;font-size:14px}
+.log-item .who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.log-item .who small{display:block;font-weight:400;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.log-item .pts{font-family:var(--font-display);font-size:20px;color:var(--tc);font-variant-numeric:tabular-nums}
+.log-item .del{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--muted)}
+.log-item .del:hover{color:var(--danger);background:#e2634c1a}
+.log-item .del svg{width:16px;height:16px}
+.log-item.confirm{background:#e2634c14;border-radius:12px}
+.confirm-row{display:flex;gap:6px}
+.confirm-row button{padding:6px 10px;border-radius:10px;font-size:13px;font-weight:700}
+.confirm-row .yes{background:var(--danger);color:#fff}
+.confirm-row .no{background:var(--surface-2)}
+
+@media (min-width:1000px){
+  .game-grid{grid-template-columns:minmax(0,1fr) 360px;align-items:start}
+  .side-col{position:sticky;top:calc(14px + env(safe-area-inset-top,0px));display:grid;gap:16px}
+  .board{gap:18px}
+  .team{padding:28px 22px;gap:14px}
+  .vs-chip{top:130px;width:56px;height:56px;font-size:18px}
+  .badge.xl{width:140px}
+  .log-list{max-height:52vh;overflow:auto}
+  .setup-grid.two{grid-template-columns:1.1fr 1fr;align-items:start}
+}
+@media (min-width:700px){ .home{padding-top:8vh} .tile{width:70px;height:136px} .pip{width:11px;height:11px} }
+
+/* ---------- sheet ---------- */
+.sheet-wrap{position:fixed;inset:0;z-index:40;display:grid;align-items:end;justify-items:center}
+.sheet-wrap .scrim{position:absolute;inset:0;background:#000a;backdrop-filter:blur(4px);opacity:0;transition:opacity .3s}
+.sheet{position:relative;width:min(100%,480px);background:var(--bg-2);border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:12px;transform:translateY(105%);transition:transform .45s var(--ease)}
+.sheet-wrap.open .scrim{opacity:1}
+.sheet-wrap.open .sheet{transform:none}
+.grab{width:44px;height:5px;border-radius:5px;background:var(--line);justify-self:center}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:16px;background:var(--surface)}
+.seg button{--tc:var(--gold);display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:12px;font-weight:700;min-width:0;padding:0 8px;transition:background .25s,color .25s}
+.seg button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seg button.on{background:var(--tc);color:#fff;text-shadow:0 1px 2px #0006}
+.display{display:flex;align-items:baseline;justify-content:center;gap:6px;font-family:var(--font-display);min-height:84px}
+.display b{font-size:72px;line-height:1;font-variant-numeric:tabular-nums}
+.display b.zero{color:var(--line)}
+.display span{color:var(--muted);font-size:18px}
+.display .after{font-family:var(--font-body);font-size:14px;color:var(--muted)}
+.quick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.quick button{min-height:40px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-weight:700;font-variant-numeric:tabular-nums}
+.quick button:active{background:var(--surface-2)}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;direction:ltr}
+.keypad button{min-height:58px;border-radius:16px;background:var(--surface);font-family:var(--font-display);font-size:26px;transition:transform .1s,background .15s}
+.keypad button:active{transform:scale(.93);background:var(--surface-2)}
+.keypad svg{width:26px;height:26px;margin:auto}
+@media (min-width:700px){ .sheet-wrap{align-items:center} .sheet{border-radius:28px;border-bottom:1px solid var(--line);transform:translateY(30px) scale(.95);opacity:0;transition:all .35s var(--ease)} .sheet-wrap.open .sheet{transform:none;opacity:1} .grab{display:none} }
+
+/* ---------- win ---------- */
+.win{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--tc) 45%,#000c),#000e 70%);animation:fadeIn .5s both}
+@keyframes fadeIn{from{opacity:0}}
+.win canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.win-card{position:relative;display:grid;justify-items:center;text-align:center;gap:12px;width:min(100%,460px)}
+.trophy{width:96px;color:var(--gold);filter:drop-shadow(0 10px 30px #e3b24f88);animation:trophy 1s .1s var(--spring) both}
+@keyframes trophy{from{opacity:0;transform:translateY(-120px) scale(.3) rotate(-30deg)}}
+.win-card .badge{animation:pop .8s .35s var(--spring) both}
+.win-card .eyebrow{color:var(--gold-2);font-size:15px;animation:fadeIn .5s .5s both}
+.win-card h2{font-size:clamp(34px,9vw,56px);line-height:1.1;animation:rise .7s .55s var(--spring) both}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}}
+.final{display:flex;gap:18px;align-items:center;font-family:var(--font-display);font-size:30px;font-variant-numeric:tabular-nums;animation:rise .7s .7s var(--spring) both}
+.final small{font-family:var(--font-body);font-size:13px;color:var(--muted);display:block}
+.final .w{color:var(--gold-2)}
+.win-meta{color:var(--muted);font-size:14px;animation:fadeIn .5s .85s both}
+.win-actions{display:grid;gap:10px;width:100%;margin-top:6px;animation:rise .7s .9s var(--spring) both}
+
+/* ---------- history ---------- */
+.h-list{display:grid;gap:12px}
+.h-item{display:grid;gap:10px;padding:14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line)}
+.h-item .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.h-match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.h-team{display:flex;align-items:center;gap:8px;min-width:0}
+.h-team:last-child{flex-direction:row-reverse;text-align:end}
+.h-team b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.h-team.lost{opacity:.55}
+.h-score{font-family:var(--font-display);font-size:22px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,40px);opacity:0;z-index:60;padding:12px 20px;border-radius:14px;background:var(--fg);color:var(--bg);font-weight:700;transition:all .35s var(--spring);pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.near-banner{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:14px;background:#e3b24f1c;border:1px solid #e3b24f55;color:var(--gold-2);font-weight:700;animation:rise .5s var(--spring) both}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- HOME -->
+  <section class="screen" id="s-home"></section>
+  <!-- SETUP -->
+  <section class="screen" id="s-setup"></section>
+  <!-- GAME -->
+  <section class="screen" id="s-game"></section>
+  <!-- HISTORY -->
+  <section class="screen" id="s-history"></section>
+</div>
+
+<div class="sheet-wrap" id="sheet" hidden>
+  <div class="scrim" data-act="close-sheet"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="grab"></div>
+    <div class="sec-title"><span id="sheet-title">نقاط الجولة</span><small>منو اللي ربح الجولة؟</small></div>
+    <div class="seg" id="sheet-seg"></div>
+    <div class="display"><b id="sheet-val" class="zero">0</b><span>نقطة</span></div>
+    <div class="display" style="min-height:0"><span class="after" id="sheet-after"></span></div>
+    <div class="quick" id="sheet-quick"></div>
+    <div class="keypad" id="sheet-keys"></div>
+    <button class="btn btn-gold" id="sheet-ok" data-act="commit">سجّل النقاط</button>
+  </div>
+</div>
+
+<div class="win" id="win" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+document.documentElement.lang = 'ar';
+document.documentElement.dir = 'rtl';
+
+/* ================= data ================= */
+const S = (p) => `<svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">${p}</svg>`;
+const ICONS = {
+  palm:{label:'نخلة', svg:S(`<path d="M30.5 60c1.6-11 1.8-21 .6-30h3.4c1 9 .8 19-.8 30z"/><path d="M32 29C27 18 17 15 7 19c9-.5 16 3 21 10z"/><path d="M33 29c5-11 15-14 25-10-9-.5-16 3-21 10z"/><path d="M32 28c-4-9-2-18 5-24-3 8-3 15-1 23z"/><path d="M32 30c-8-5-18-3-24 5 8-4 15-5 22-3z"/><path d="M33 30c8-5 18-3 24 5-8-4-15-5-22-3z"/><circle cx="28" cy="34" r="2.6" opacity=".85"/><circle cx="37" cy="34" r="2.6" opacity=".85"/><circle cx="32.5" cy="37" r="2.6" opacity=".85"/>`)},
+  balam:{label:'بلم', svg:S(`<rect x="31" y="8" width="3" height="32" rx="1"/><path d="M35 10c11 7 15 17 15 26H35z" opacity=".75"/><path d="M30 14c-8 6-11 14-11 22h11z" opacity=".5"/><path d="M4 40h56c-5 9-14 13-28 13S9 49 4 40z"/><path d="M6 58c5-3 9-3 13 0s9 3 13 0 9-3 13 0 9 3 13 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>`)},
+  shabbout:{label:'شبوط', svg:S(`<path d="M6 32c9-13 28-15 40-5l12-9v28l-12-9C34 47 15 45 6 32z"/><path d="M26 22c4-6 10-8 16-7-3 3-5 6-6 9z" opacity=".7"/><circle cx="16" cy="30" r="2.8" fill="#000" opacity=".45"/><path d="M24 26c3 4 3 8 0 12" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="2"/>`)},
+  shanasheel:{label:'شناشيل', svg:S(`<path d="M12 60V26c0-11 9-19 20-19s20 8 20 19v34z" opacity=".35"/><path d="M12 60V26c0-11 9-19 20-19s20 8 20 19v34" fill="none" stroke="currentColor" stroke-width="3.5"/><g fill="none" stroke="currentColor" stroke-width="2.4"><path d="M32 8v52M12 34h40M12 47h40"/><path d="M18 34l7 13M25 34l-7 13M39 34l7 13M46 34l-7 13M22 21l6 13M42 21l-6 13"/></g><rect x="8" y="58" width="48" height="4" rx="1"/>`)},
+  dome:{label:'قبة', svg:S(`<rect x="8" y="54" width="48" height="6" rx="1.5"/><path d="M14 54V42c0-11 8-20 18-22 10 2 18 11 18 22v12z"/><rect x="30.8" y="6" width="2.4" height="14"/><path d="M36 7a5 5 0 1 1-4-4 4 4 0 1 0 4 4z"/><rect x="21" y="44" width="5" height="10" rx="2.5" fill="#000" opacity=".3"/><rect x="38" y="44" width="5" height="10" rx="2.5" fill="#000" opacity=".3"/><rect x="29.5" y="42" width="5" height="12" rx="2.5" fill="#000" opacity=".3"/>`)},
+  rutab:{label:'رطب', svg:S(`<path d="M32 4c-2 6-1 10 0 14M32 10c6-3 12-2 16 2-6 0-10 1-15 4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>${[[24,24],[34,22],[42,30],[20,34],[30,33],[40,41],[24,44],[33,44],[29,54]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="5.2" ry="7" transform="rotate(${(x-31)*1.5} ${x} ${y})"/>`).join('')}`)},
+  anchor:{label:'مرساة', svg:S(`<g fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"><circle cx="32" cy="11" r="5"/><path d="M32 16v42M22 26h20M10 38c2 12 11 20 22 20s20-8 22-20"/></g><path d="M5 40l5-7 6 7zM59 40l-5-7-6 7z"/>`)},
+  shatt:{label:'شط', svg:S(`<circle cx="44" cy="16" r="8" opacity=".9"/><g fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"><path d="M4 32c5-5 9-5 14 0s9 5 14 0 9-5 14 0 9 5 14 0"/><path d="M4 44c5-5 9-5 14 0s9 5 14 0 9-5 14 0 9 5 14 0" opacity=".75"/><path d="M4 56c5-5 9-5 14 0s9 5 14 0 9-5 14 0 9 5 14 0" opacity=".5"/></g>`)},
+  istikan:{label:'استكان', svg:S(`<g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".7"><path d="M27 4c-3 3 3 5 0 8M35 3c-3 3 3 5 0 8"/></g><path d="M20 16h24l-4 14c-1 3-1 5 0 8l4 14H20l4-14c1-3 1-5 0-8z"/><path d="M23.5 24h17l-2.4 6.5c-.8 2.6-.8 4.4 0 7L41.5 46h-19l3.4-8.5c.8-2.6.8-4.4 0-7z" fill="#000" opacity=".28"/><ellipse cx="32" cy="56" rx="22" ry="5"/>`)},
+  taj:{label:'تاج', svg:S(`<path d="M8 46L4 18l15 12L32 10l13 20 15-12-4 28z"/><rect x="8" y="49" width="48" height="8" rx="2"/><circle cx="4" cy="16" r="3.5"/><circle cx="32" cy="8" r="3.5"/><circle cx="60" cy="16" r="3.5"/><circle cx="32" cy="36" r="4" fill="#000" opacity=".3"/>`)},
+  domino:{label:'دومنة', svg:S(`<rect x="16" y="4" width="32" height="56" rx="6" transform="rotate(14 32 32)"/><g fill="#000" opacity=".42" transform="rotate(14 32 32)"><rect x="19" y="31" width="26" height="2.4" rx="1"/><circle cx="25" cy="12" r="3"/><circle cx="32" cy="18" r="3"/><circle cx="39" cy="24" r="3"/><circle cx="25" cy="41" r="3"/><circle cx="39" cy="41" r="3"/><circle cx="25" cy="52" r="3"/><circle cx="39" cy="52" r="3"/></g>`)},
+  shams:{label:'شمس', svg:S(`<circle cx="32" cy="32" r="12"/><g stroke="currentColor" stroke-width="4" stroke-linecap="round">${Array.from({length:12},(_,i)=>{const a=i*Math.PI/6,r1=18,r2=i%2?25:28;return `<line x1="${(32+Math.cos(a)*r1).toFixed(1)}" y1="${(32+Math.sin(a)*r1).toFixed(1)}" x2="${(32+Math.cos(a)*r2).toFixed(1)}" y2="${(32+Math.sin(a)*r2).toFixed(1)}"/>`}).join('')}</g>`)},
+};
+const COLORS = {
+  gold:{label:'برحي', c:'#d39a2e'}, palm:{label:'سعف', c:'#3c9a58'}, shatt:{label:'شط', c:'#2389b0'},
+  brick:{label:'طابوق', c:'#c4492f'}, rose:{label:'ورد', c:'#bf4f85'}, violet:{label:'بنفسج', c:'#7360d0'},
+};
+const NAMES = ['نخل البصرة','شط العرب','أسود العشار','صقور الزبير','شناشيل البصرة','سندباد البصرة','ربع أبو الخصيب','نوارس الفاو','برحي البصرة','مشاحيف الهور','جماعة القرنة','أبطال المعقل','شباب التنومة','نمور الخورة','ربع الكورنيش','بلم العشار','شبوط الشط','هيبة الجنوب','ملوك الدومنة','استكان چاي','أهل البراضعية','ذيب الجمهورية'];
+const PLAYER_HINTS = [['مثلاً: حيدر','مثلاً: مصطفى'],['مثلاً: علي','مثلاً: سجاد']];
+const TARGETS = [[51,'سريعة'],[101,'كلاسيكية'],[151,'طويلة'],[201,'سهرة'],[251,'للصبح']];
+
+const UI = {
+  back:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>`,
+  home:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>`,
+  plus:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
+  undo:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 0 0 0 10h2"/></svg>`,
+  sound:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>`,
+  list:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>`,
+  x:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+  dice:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>`,
+  bksp:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H8l-6 7 6 7h13z"/><path d="M12 9l6 6M18 9l-6 6"/></svg>`,
+  crown:`<svg viewBox="0 0 64 64" fill="currentColor"><path d="M8 46L4 18l15 12L32 10l13 20 15-12-4 28z"/><rect x="8" y="49" width="48" height="8" rx="2"/></svg>`,
+  trophy:`<svg viewBox="0 0 64 64" fill="currentColor"><path d="M18 6h28v14c0 10-6 18-14 19-8-1-14-9-14-19z"/><path d="M18 10H8c0 10 5 16 12 17M46 10h10c0 10-5 16-12 17" fill="none" stroke="currentColor" stroke-width="4"/><rect x="29" y="38" width="6" height="10"/><path d="M20 58c0-6 5-10 12-10s12 4 12 10z"/><path d="M32 13l2.4 5 5.4.6-4 3.7 1.1 5.4-4.9-2.7-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z" fill="#000" opacity=".25"/></svg>`,
+  share:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>`,
+  play:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 5v14L6 12z"/></svg>`,
+  swap:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg>`,
+};
+
+/* ================= state ================= */
+const KEY = 'domino-basra-v1';
+let store = { match:null, history:[], sound:true };
+try { const raw = localStorage.getItem(KEY); if (raw) store = Object.assign(store, JSON.parse(raw)); } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {} };
+
+const $ = (s, r=document) => r.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const col = (k) => (COLORS[k] || COLORS.gold).c;
+const badge = (t, cls='') => `<span class="badge ${cls}" style="--tc:${col(t.color)}">${(ICONS[t.icon]||ICONS.palm).svg}</span>`;
+const shuffle = (a) => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const fmtTime = (ms) => { const s = Math.max(0, Math.floor(ms/1000)); const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return (h? h+':'+String(m).padStart(2,'0') : m) + ':' + String(x).padStart(2,'0'); };
+const fmtDur = (ms) => { const m = Math.round(ms/60000); return m < 1 ? 'أقل من دقيقة' : m < 60 ? `${m} دقيقة` : `${Math.floor(m/60)} س ${m%60} د`; };
+const fmtDate = (t) => new Date(t).toLocaleDateString('ar-IQ-u-nu-latn', {weekday:'short', day:'numeric', month:'short'}) + ' · ' + new Date(t).toLocaleTimeString('ar-IQ-u-nu-latn',{hour:'numeric',minute:'2-digit'});
+
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), 2200); }
+function buzz(p){ try { navigator.vibrate && navigator.vibrate(p); } catch(e) {} }
+
+/* ================= sound ================= */
+let ac;
+function audio(){ if (!store.sound) return null; try { ac = ac || new (window.AudioContext||window.webkitAudioContext)(); if (ac.state==='suspended') ac.resume(); return ac; } catch(e){ return null; } }
+function clack(){
+  const a = audio(); if (!a) return; const t = a.currentTime;
+  const len = Math.floor(a.sampleRate*.06), buf = a.createBuffer(1,len,a.sampleRate), d = buf.getChannelData(0);
+  for (let i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/len, 4);
+  const src = a.createBufferSource(); src.buffer = buf;
+  const bp = a.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value = 2600; bp.Q.value = 1.4;
+  const g = a.createGain(); g.gain.value = .9;
+  src.connect(bp).connect(g).connect(a.destination); src.start(t);
+  const o = a.createOscillator(), og = a.createGain(); o.type='sine'; o.frequency.setValueAtTime(320,t); o.frequency.exponentialRampToValueAtTime(120,t+.08);
+  og.gain.setValueAtTime(.25,t); og.gain.exponentialRampToValueAtTime(.001,t+.1); o.connect(og).connect(a.destination); o.start(t); o.stop(t+.12);
+}
+function tone(freq, start, dur, type='triangle', vol=.18){
+  const a = audio(); if (!a) return; const t = a.currentTime + start;
+  const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+.05);
+}
+function fanfare(){ [[523,0],[659,.12],[784,.24],[1047,.4]].forEach(([f,s])=>tone(f,s,.5)); [[784,.75],[1047,.75],[1319,.75]].forEach(([f,s])=>tone(f,s,1.2,'triangle',.12)); }
+function blip(){ tone(880,0,.08,'sine',.08); }
+
+/* ================= routing ================= */
+let current = 'home';
+function show(name){
+  current = name;
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === 's-'+name));
+  window.scrollTo({top:0});
+  if (name === 'game') { startTicker(); keepAwake(); } else { stopTicker(); }
+}
+
+/* ================= HOME ================= */
+const pipMap = {0:[],1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+const half = (n, red) => `<div class="half">${Array.from({length:9},(_,i)=>pipMap[n].includes(i)?`<i class="pip${red?' r':''}"></i>`:'<i></i>').join('')}</div>`;
+const tileHTML = (a,b,red) => `<div class="tile">${half(a,red&&a===1)}<div class="bar"></div>${half(b)}</div>`;
+
+function leaderboard(){
+  const m = {};
+  store.history.forEach(h => h.teams.forEach((t,i) => {
+    const k = t.name; m[k] = m[k] || {team:t, played:0, wins:0, pts:0};
+    m[k].team = t; m[k].played++; m[k].pts += t.score; if (h.winner === i) m[k].wins++;
+  }));
+  return Object.values(m).sort((a,b)=> b.wins-a.wins || (b.wins/b.played)-(a.wins/a.played) || b.pts-a.pts);
+}
+
+function renderHome(){
+  const M = store.match, live = M && !M.finished;
+  const lb = leaderboard().slice(0,5);
+  $('#s-home').innerHTML = `
+  <div class="home">
+    <div class="hero">
+      <div class="tiles" aria-hidden="true">${tileHTML(6,6)}${tileHTML(1,5,true)}${tileHTML(3,4)}</div>
+      <span class="eyebrow">سجل نقاط الدومنة · فريقين ضد فريقين</span>
+      <h1 class="title-xl">دومنة البصرة</h1>
+      <p>اختاروا اسم الفريق وشعاره، وسجّلوا نقاط كل جولة. التطبيق يحسب المجموع ويعلن الفايز.</p>
+    </div>
+    <div class="home-actions">
+      ${live ? `<button class="resume" data-act="resume">
+          ${badge(M.teams[0],'sm')}
+          <span><span class="eyebrow">كمّل المباراة · الجولة ${M.rounds.length+1}</span>
+            <span class="mini"><span class="num">${score(0)}</span><span style="color:var(--muted)">–</span><span class="num">${score(1)}</span></span></span>
+          ${badge(M.teams[1],'sm')}
+        </button>` : ''}
+      <button class="btn btn-gold" data-act="new">${UI.plus} مباراة جديدة</button>
+      ${store.match && store.match.finished ? `<button class="btn btn-ghost" data-act="rematch">${UI.swap} ثأر بنفس الفرق</button>` : ''}
+      <button class="btn btn-ghost" data-act="history">${UI.list} سجل المباريات</button>
+    </div>
+    <div class="panel board-top">
+      <div class="sec-title"><h3 style="font-size:19px">ترتيب الفرق</h3><small>${store.history.length} مباراة</small></div>
+      ${lb.length ? lb.map((r,i)=>`<div class="lb-row"><span class="lb-rank">${i+1}</span>${badge(r.team,'sm')}<span class="lb-name">${esc(r.team.name)}</span><span class="lb-stat"><b>${r.wins}</b> فوز من ${r.played}</span></div>`).join('')
+        : `<p class="empty">بعد ما تخلص أول مباراة، يطلع هنا ترتيب الفرق حسب عدد مرات الفوز.</p>`}
+    </div>
+  </div>`;
+}
+
+/* ================= SETUP ================= */
+let draft, step = 0;
+function newDraft(){
+  const n = shuffle(NAMES);
+  const prev = store.match;
+  draft = {
+    teams: prev ? prev.teams.map(t=>({name:t.name,icon:t.icon,color:t.color,players:[...t.players]}))
+      : [{name:n[0],icon:'palm',color:'gold',players:['','']},{name:n[1],icon:'balam',color:'shatt',players:['','']}],
+    target: prev ? prev.target : 101, custom:'', starter:0,
+  };
+}
+function renderSetup(){
+  const el = $('#s-setup');
+  const stepsBar = `<div class="steps" aria-label="الخطوة ${step+1} من 3">${[0,1,2].map(i=>`<i class="${i<=step?'on':''}"></i>`).join('')}</div>`;
+  const head = `<div class="topbar"><button class="icon-btn" data-act="${step? 'prev':'home'}" aria-label="رجوع">${UI.back}</button>${stepsBar}<span class="eyebrow">${['الفريق الأول','الفريق الثاني','الإعدادات'][step]}</span></div>`;
+  if (step < 2){
+    const i = step, t = draft.teams[i], o = draft.teams[1-i];
+    el.innerHTML = head + `
+    <div class="setup-grid two">
+      <div class="setup-grid">
+        <div class="preview" id="pv" style="--tc:${col(t.color)}">
+          ${badge(t,'xl')}
+          <div style="min-width:0;display:grid;gap:4px">
+            <span class="eyebrow">${i? 'الفريق الثاني':'الفريق الأول'}</span>
+            <h2 id="pv-name">${esc(t.name)||'بلا اسم'}</h2>
+            <span class="players" id="pv-players">${playersLine(t)}</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-name">اسم الفريق</label>
+          <div class="row"><input class="input" id="f-name" maxlength="24" value="${esc(t.name)}" autocomplete="off">
+            <button class="icon-btn" style="flex:none;width:52px;height:52px" data-act="rand-name" aria-label="اسم عشوائي">${UI.dice}</button></div>
+        </div>
+        <div class="field">
+          <span class="sec-title">أسماء من البصرة والعراق<small>اضغط لاختيار</small></span>
+          <div class="chips" id="chips">${NAMES.map(n=>`<button class="chip ${n===t.name?'on':''}" data-name="${esc(n)}" ${n===o.name?'disabled style="opacity:.3"':''}>${esc(n)}</button>`).join('')}</div>
+        </div>
+        <div class="field">
+          <span class="sec-title">اللاعبين</span>
+          <div class="row">
+            <input class="input" id="f-p0" maxlength="16" placeholder="${PLAYER_HINTS[i][0]}" value="${esc(t.players[0])}" autocomplete="off" aria-label="اللاعب الأول">
+            <input class="input" id="f-p1" maxlength="16" placeholder="${PLAYER_HINTS[i][1]}" value="${esc(t.players[1])}" autocomplete="off" aria-label="اللاعب الثاني">
+          </div>
+        </div>
+      </div>
+      <div class="setup-grid">
+        <div class="field">
+          <span class="sec-title">الشعار<small>من رموز البصرة</small></span>
+          <div class="icon-grid">${Object.entries(ICONS).map(([k,v])=>`<button class="icon-opt ${k===t.icon?'on':''}" style="--tc:${col(t.color)}" data-icon="${k}" ${k===o.icon?'disabled':''}>${badge({icon:k,color:t.color})}${v.label}</button>`).join('')}</div>
+        </div>
+        <div class="field">
+          <span class="sec-title">لون الفريق</span>
+          <div class="swatches">${Object.entries(COLORS).map(([k,v])=>`<button class="swatch ${k===t.color?'on':''}" style="--c:${v.c}" data-color="${k}" aria-label="${v.label}" title="${v.label}" ${k===o.color?'disabled':''}></button>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+    <p class="err" id="err"></p>
+    <div class="nav-row">${step? `<button class="btn btn-ghost" data-act="prev">رجوع</button>`:''}<button class="btn btn-gold" data-act="next">التالي</button></div>`;
+    const nameIn = $('#f-name');
+    nameIn.addEventListener('input', () => { t.name = nameIn.value; $('#pv-name').textContent = t.name.trim() || 'بلا اسم'; document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('on', c.dataset.name === t.name)); });
+    [0,1].forEach(p => $('#f-p'+p).addEventListener('input', e => { t.players[p] = e.target.value; $('#pv-players').textContent = playersLine(t); }));
+  } else {
+    const [a,b] = draft.teams;
+    const pl = playerOrder(draft.teams);
+    el.innerHTML = head + `
+    <div class="setup-grid" style="max-width:720px;margin:0 auto">
+      <div class="panel versus vs-anim">
+        <div class="side">${badge(a,'lg')}<b>${esc(a.name)}</b></div>
+        <div class="vs">ضد</div>
+        <div class="side">${badge(b,'lg')}<b>${esc(b.name)}</b></div>
+      </div>
+      <div class="field">
+        <span class="sec-title">اللعب إلى كم؟<small>أول فريق يوصل يفوز</small></span>
+        <div class="targets">${TARGETS.map(([v,l])=>`<button class="target ${draft.target===v&&!draft.custom?'on':''}" data-target="${v}"><b>${v}</b><span>${l}</span></button>`).join('')}</div>
+        <input class="input" id="f-custom" inputmode="numeric" maxlength="4" placeholder="أو اكتب رقم خاص (مثلاً 300)" value="${esc(draft.custom)}">
+      </div>
+      <div class="field">
+        <label for="f-starter">منو يطرح أول جولة؟</label>
+        <select class="input" id="f-starter">${pl.map((p,i)=>`<option value="${i}" ${draft.starter===i?'selected':''}>${esc(p.name)} — ${esc(draft.teams[p.team].name)}</option>`).join('')}</select>
+      </div>
+      <p class="err" id="err"></p>
+      <div class="nav-row"><button class="btn btn-ghost" data-act="prev">رجوع</button><button class="btn btn-gold" data-act="start">${UI.play} يلّا نلعب</button></div>
+    </div>`;
+    $('#f-custom').addEventListener('input', e => { draft.custom = e.target.value.replace(/\D/g,''); e.target.value = draft.custom; document.querySelectorAll('.target').forEach(x=>x.classList.toggle('on', !draft.custom && +x.dataset.target===draft.target)); });
+    $('#f-starter').addEventListener('change', e => draft.starter = +e.target.value);
+  }
+}
+function playersLine(t){ const p = t.players.map(s=>s.trim()).filter(Boolean); return p.length ? p.join(' و ') : 'اكتبوا أسماء اللاعبين'; }
+function playerOrder(teams){
+  const nm = (ti,pi) => teams[ti].players[pi]?.trim() || `لاعب ${pi+1} (${teams[ti].name})`;
+  return [{team:0,name:nm(0,0)},{team:1,name:nm(1,0)},{team:0,name:nm(0,1)},{team:1,name:nm(1,1)}];
+}
+function validateTeam(i){
+  const t = draft.teams[i]; t.name = t.name.trim();
+  if (!t.name) return 'اكتب اسم الفريق';
+  if (i===1 && t.name === draft.teams[0].name.trim()) return 'الاسم نفس اسم الفريق الأول، اختار اسم ثاني';
+  return '';
+}
+
+/* ================= MATCH ================= */
+function score(i, M=store.match){ return M ? M.rounds.reduce((s,r)=> s + (r.team===i ? r.pts : 0), 0) : 0; }
+
+function startMatch(keepSeries){
+  const prev = store.match;
+  const target = draft.custom ? Math.max(10, Math.min(9999, +draft.custom)) : draft.target;
+  const sameTeams = prev && prev.teams.every((t,i)=>t.name===draft.teams[i].name);
+  store.match = {
+    teams: draft.teams.map(t=>({name:t.name.trim(), icon:t.icon, color:t.color, players:t.players.map(p=>p.trim())})),
+    target, rounds:[], starter:draft.starter, startedAt:Date.now(), finished:false, winner:null,
+    series: (keepSeries || sameTeams) && prev ? [...prev.series] : [0,0],
+  };
+  save(); renderGame(); show('game'); clack(); buzz(30);
+}
+function rematch(){
+  const p = store.match;
+  draft = { teams:p.teams.map(t=>({...t, players:[...t.players]})), target:p.target, custom:'', starter:(p.starter+1)%4 };
+  closeWin(); startMatch(true);
+}
+
+/* ================= GAME ================= */
+function renderGame(){
+  const M = store.match; if (!M) return;
+  const pl = playerOrder(M.teams), st = pl[M.starter % 4];
+  $('#s-game').innerHTML = `
+  <div class="g-top">
+    <button class="icon-btn" data-act="home" aria-label="الرئيسية">${UI.home}</button>
+    <div class="mid"><b>اللعب إلى ${M.target}</b><span id="g-meta"></span></div>
+    <button class="icon-btn" data-act="sound" aria-pressed="${store.sound}" aria-label="الصوت">${UI.sound}</button>
+    <button class="icon-btn" data-act="history" aria-label="السجل">${UI.list}</button>
+  </div>
+  <div class="game-grid">
+    <div style="display:grid;gap:14px;min-width:0">
+      <div id="near-slot"></div>
+      <div class="board">
+        ${M.teams.map((t,i)=>`
+        <div class="team" id="team-${i}" style="--tc:${col(t.color)}">
+          <span class="crown">${UI.crown}</span>
+          ${badge(t,'xl')}
+          <div class="tname">${esc(t.name)}</div>
+          <div class="tplayers">${esc(t.players.filter(Boolean).join(' · ') || ' ')}</div>
+          <div class="score" id="sc-${i}">${score(i)}</div>
+          <div class="progress"><i id="pg-${i}"></i></div>
+          <div class="need" id="nd-${i}"></div>
+          <div class="wins" id="wn-${i}" aria-label="مرات الفوز">${'<i></i>'.repeat(Math.min(M.series[i],10))}</div>
+          <button class="add-btn" data-act="add" data-team="${i}">${UI.plus} نقاط</button>
+        </div>`).join('')}
+        <div class="vs-chip">ضد</div>
+      </div>
+      <div class="strip">
+        <button class="starter" data-act="next-starter" style="--tc:${col(M.teams[st.team].color)}" aria-label="تغيير الطارح">
+          <span class="dot"></span><span><small>الطرح على</small><b id="st-name">${esc(st.name)}</b></span>
+        </button>
+        <button class="btn btn-ghost" data-act="undo" ${M.rounds.length?'':'disabled style="opacity:.4"'}>${UI.undo} تراجع</button>
+      </div>
+    </div>
+    <div class="side-col" style="display:grid;gap:14px;min-width:0">
+      <div class="stats">
+        <div class="stat"><b id="st-rounds">${M.rounds.length}</b><span>جولة</span></div>
+        <div class="stat"><b id="st-max">${M.rounds.reduce((m,r)=>Math.max(m,r.pts),0)}</b><span>أعلى جولة</span></div>
+        <div class="stat"><b id="st-time">0:00</b><span>الوقت</span></div>
+      </div>
+      <div class="panel log">
+        <div class="log-head"><h3>الجولات</h3><span class="eyebrow">${M.series[0]+M.series[1] ? `السلسلة ${M.series[0]}–${M.series[1]}` : ''}</span></div>
+        <ul class="log-list" id="log">${logHTML()}</ul>
+      </div>
+    </div>
+  </div>`;
+  updateBoard(false);
+}
+function logHTML(){
+  const M = store.match;
+  if (!M.rounds.length) return `<li><p class="empty">ما كو جولات بعد. اضغطوا «نقاط» تحت الفريق اللي ربح الجولة.</p></li>`;
+  let a=0,b=0; const rows = M.rounds.map((r,i)=>{ r.team?b+=r.pts:a+=r.pts; return {r,i,a,b}; });
+  return rows.reverse().map(({r,i,a,b})=>{ const t = M.teams[r.team];
+    return `<li class="log-item" data-i="${i}" style="--tc:${col(t.color)}"><span class="rn">${i+1}</span>${badge(t,'sm')}<span class="who">${esc(t.name)}<small>${a} – ${b}</small></span>
+      <span style="display:flex;align-items:center;gap:6px"><span class="pts">+${r.pts}</span><button class="del" data-act="ask-del" data-i="${i}" aria-label="حذف الجولة ${i+1}">${UI.x}</button></span></li>`; }).join('');
+}
+function updateBoard(animate, lastTeam, lastPts){
+  const M = store.match; const s = [score(0), score(1)];
+  [0,1].forEach(i=>{
+    const card = $('#team-'+i); if (!card) return;
+    const sc = $('#sc-'+i);
+    if (animate && i===lastTeam) countUp(sc, s[i]-lastPts, s[i]); else sc.textContent = s[i];
+    requestAnimationFrame(()=> $('#pg-'+i).style.width = Math.min(100, s[i]/M.target*100) + '%');
+    const left = M.target - s[i];
+    $('#nd-'+i).textContent = left > 0 ? `باقي ${left}` : 'وصل!';
+    card.classList.toggle('lead', s[i] > s[1-i]);
+    card.classList.toggle('near', left > 0 && left <= Math.max(15, M.target*.15));
+  });
+  const nearI = [0,1].filter(i=> M.target - s[i] > 0 && M.target - s[i] <= Math.max(15, M.target*.15));
+  $('#near-slot').innerHTML = nearI.length ? `<div class="near-banner">${nearI.map(i=>esc(M.teams[i].name)).join(' و ')} ${nearI.length>1?'قريبين':'قريب'} من الفوز!</div>` : '';
+  $('#st-rounds').textContent = M.rounds.length;
+  $('#st-max').textContent = M.rounds.reduce((m,r)=>Math.max(m,r.pts),0);
+  tick();
+}
+function countUp(el, from, to){
+  el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+  const t0 = performance.now(), d = 700;
+  const step = (now) => { const p = Math.min(1,(now-t0)/d), e = 1-Math.pow(1-p,3); el.textContent = Math.round(from + (to-from)*e); if (p<1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+function floatPts(i, pts){
+  const card = $('#team-'+i); if (!card) return;
+  const f = document.createElement('span'); f.className='float'; f.textContent = '+'+pts; card.appendChild(f);
+  setTimeout(()=>f.remove(), 1400);
+}
+
+function addRound(team, pts){
+  const M = store.match; if (!M || M.finished || !pts) return;
+  const before = score(team);
+  M.rounds.push({team, pts, t:Date.now()});
+  M.starter = (M.starter + 1) % 4;
+  save();
+  const leaderBefore = Math.sign(before - score(1-team));
+  $('#log').innerHTML = logHTML();
+  updateBoard(true, team, pts);
+  floatPts(team, pts); clack(); buzz(25);
+  const pl = playerOrder(M.teams), st = pl[M.starter]; $('#st-name').textContent = st.name;
+  $('.starter').style.setProperty('--tc', col(M.teams[st.team].color));
+  const undoBtn = $('[data-act="undo"]'); undoBtn.disabled = false; undoBtn.style.opacity = '';
+  const now = score(team);
+  if (now >= M.target) { setTimeout(()=>finish(team), 900); return; }
+  if (leaderBefore <= 0 && now > score(1-team)) setTimeout(()=>{ toast(`${M.teams[team].name} صار بالمقدمة`); blip(); }, 500);
+}
+function undo(){
+  const M = store.match; if (!M || !M.rounds.length) return;
+  const r = M.rounds.pop(); M.starter = (M.starter + 3) % 4; save(); renderGame();
+  toast(`انحذفت جولة ${M.rounds.length+1} (+${r.pts})`);
+}
+function deleteRound(i){
+  const M = store.match; M.rounds.splice(i,1); save(); renderGame(); toast(`انحذفت الجولة ${i+1}`);
+}
+
+/* timer + wake lock */
+let ticker;
+function tick(){ const M = store.match; const el = $('#st-time'); if (M && el) { el.textContent = fmtTime((M.finished? M.endedAt : Date.now()) - M.startedAt); $('#g-meta').textContent = `الجولة ${M.rounds.length+1}`; } }
+function startTicker(){ stopTicker(); ticker = setInterval(tick, 1000); }
+function stopTicker(){ clearInterval(ticker); }
+let wake;
+async function keepAwake(){ try { if ('wakeLock' in navigator && !wake) { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', ()=> wake = null); } } catch(e) {} }
+document.addEventListener('visibilitychange', ()=>{ if (document.visibilityState==='visible' && current==='game') keepAwake(); });
+
+/* ================= SHEET ================= */
+let sheetTeam = 0, sheetVal = '';
+function openSheet(team){
+  const M = store.match; if (!M || M.finished) return;
+  sheetTeam = team; sheetVal = '';
+  $('#sheet-seg').innerHTML = M.teams.map((t,i)=>`<button data-act="seg" data-team="${i}" style="--tc:${col(t.color)}" class="${i===team?'on':''}">${badge(t,'sm')}<span>${esc(t.name)}</span></button>`).join('');
+  $('#sheet-quick').innerHTML = [5,10,15,20,25].map(v=>`<button data-act="quick" data-v="${v}">+${v}</button>`).join('');
+  $('#sheet-keys').innerHTML = [1,2,3,4,5,6,7,8,9].map(n=>`<button data-act="key" data-k="${n}">${n}</button>`).join('') + `<button data-act="key" data-k="c" aria-label="مسح">C</button><button data-act="key" data-k="0">0</button><button data-act="key" data-k="b" aria-label="حذف رقم">${UI.bksp}</button>`;
+  paintSheet();
+  const w = $('#sheet'); w.hidden = false; requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('open')));
+}
+function closeSheet(){ const w = $('#sheet'); w.classList.remove('open'); setTimeout(()=>{ if (!w.classList.contains('open')) w.hidden = true; }, 420); }
+function paintSheet(){
+  const v = +sheetVal || 0, M = store.match, el = $('#sheet-val');
+  el.textContent = v; el.classList.toggle('zero', !v);
+  el.style.color = v ? col(M.teams[sheetTeam].color) : '';
+  document.querySelectorAll('#sheet-seg button').forEach(b=>b.classList.toggle('on', +b.dataset.team===sheetTeam));
+  const after = score(sheetTeam) + v;
+  $('#sheet-after').textContent = v ? (after >= M.target ? `بهاي الجولة ${M.teams[sheetTeam].name} يفوز (${after})` : `المجموع يصير ${after} من ${M.target}`) : `المجموع الحالي ${score(sheetTeam)}`;
+  $('#sheet-ok').disabled = !v; $('#sheet-ok').style.opacity = v ? '' : '.45';
+}
+function sheetKey(k){
+  if (k==='c') sheetVal=''; else if (k==='b') sheetVal = sheetVal.slice(0,-1);
+  else if (sheetVal.length < 3) sheetVal = (sheetVal==='0'?'':sheetVal) + k;
+  paintSheet(); buzz(8);
+}
+function commitSheet(){ const v = +sheetVal || 0; if (!v) return; closeSheet(); setTimeout(()=>addRound(sheetTeam, v), 220); }
+
+document.addEventListener('keydown', e=>{
+  const open = !$('#sheet').hidden;
+  if (open){
+    if (/^\d$/.test(e.key)) sheetKey(e.key);
+    else if (e.key==='Backspace') sheetKey('b');
+    else if (e.key==='Enter') { e.preventDefault(); commitSheet(); }
+    else if (e.key==='Escape') closeSheet();
+    else if (e.key==='ArrowLeft' || e.key==='ArrowRight' || e.key==='Tab') { e.preventDefault(); sheetTeam = 1-sheetTeam; paintSheet(); }
+    return;
+  }
+  if (!$('#win').hidden && e.key==='Escape') { closeWin(); return; }
+  if (current==='game' && !e.target.closest('input,select')){
+    if (e.key==='1') openSheet(0); else if (e.key==='2') openSheet(1);
+    else if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z') undo();
+  }
+});
+
+/* ================= WIN ================= */
+function finish(team){
+  const M = store.match; if (M.finished) return;
+  M.finished = true; M.winner = team; M.endedAt = Date.now(); M.series[team]++;
+  store.history.unshift({ id:M.startedAt, date:M.endedAt, target:M.target, winner:team, rounds:M.rounds.length, duration:M.endedAt-M.startedAt,
+    teams:M.teams.map((t,i)=>({name:t.name,icon:t.icon,color:t.color,players:t.players,score:score(i)})) });
+  store.history = store.history.slice(0,200);
+  save();
+  const t = M.teams[team], s = [score(0),score(1)];
+  const w = $('#win'); w.style.setProperty('--tc', col(t.color));
+  w.innerHTML = `<canvas id="confetti"></canvas>
+    <div class="win-card" role="dialog" aria-modal="true" aria-labelledby="win-title">
+      <span class="trophy">${UI.trophy}</span>
+      ${badge(t,'xl')}
+      <span class="eyebrow">مبروك! الفايز</span>
+      <h2 id="win-title">${esc(t.name)}</h2>
+      <div class="final">
+        <span class="${team===0?'w':''}">${s[0]}<small>${esc(M.teams[0].name)}</small></span>
+        <span style="color:var(--muted)">–</span>
+        <span class="${team===1?'w':''}">${s[1]}<small>${esc(M.teams[1].name)}</small></span>
+      </div>
+      <div class="win-meta">${M.rounds.length} جولة · ${fmtDur(M.endedAt-M.startedAt)} · السلسلة ${M.series[0]}–${M.series[1]}</div>
+      <div class="win-actions">
+        <button class="btn btn-gold" data-act="rematch">${UI.swap} ثأر بنفس الفرق</button>
+        <div class="row"><button class="btn btn-ghost" data-act="share">${UI.share} نسخ النتيجة</button><button class="btn btn-ghost" data-act="new">فرق جديدة</button></div>
+        <button class="btn btn-ghost" data-act="close-win" style="min-height:44px;font-size:15px">رجوع للوحة</button>
+      </div>
+    </div>`;
+  w.hidden = false; fanfare(); buzz([60,40,60,40,160]);
+  confetti($('#confetti'), [col(t.color), '#f7d68f', '#e3b24f', '#fffaf0']);
+  renderGame(); tick();
+}
+function closeWin(){ const w = $('#win'); w.hidden = true; w.innerHTML = ''; }
+function confetti(cv, colors){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx = cv.getContext('2d'), dpr = Math.min(2, devicePixelRatio||1);
+  const W = cv.width = innerWidth*dpr, H = cv.height = innerHeight*dpr;
+  const parts = Array.from({length:220}, (_,i)=>({ x: W/2 + (Math.random()-.5)*W*.2, y: H*.38, vx:(Math.random()-.5)*22*dpr, vy:(-Math.random()*22-6)*dpr,
+    s:(Math.random()*8+5)*dpr, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:colors[i%colors.length], shape:Math.random()<.3?'pip':'rect' }));
+  const t0 = performance.now();
+  (function frame(now){
+    if (!cv.isConnected) return;
+    ctx.clearRect(0,0,W,H); const age = (now-t0)/1000;
+    parts.forEach(p=>{ p.vy += .45*dpr; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.globalAlpha = Math.max(0, 1 - age/5); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+      if (p.shape==='pip'){ ctx.beginPath(); ctx.arc(0,0,p.s/2,0,7); ctx.fill(); } else ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);
+      ctx.restore(); });
+    if (age < 5) requestAnimationFrame(frame); else ctx.clearRect(0,0,W,H);
+  })(t0);
+}
+async function shareResult(){
+  const M = store.match, s=[score(0),score(1)];
+  const txt = `دومنة البصرة\n${M.teams[0].name} ${s[0]} – ${s[1]} ${M.teams[1].name}\nالفايز: ${M.teams[M.winner].name}\n${M.rounds.length} جولة · اللعب إلى ${M.target}`;
+  try { await navigator.clipboard.writeText(txt); toast('انتسخت النتيجة، الصقها بالواتساب'); } catch(e) { toast('ما گدرت أنسخ، جرّب مرة ثانية'); }
+}
+
+/* ================= HISTORY ================= */
+let confirmClear = false;
+function renderHistory(){
+  const H = store.history;
+  $('#s-history').innerHTML = `
+  <div class="topbar"><button class="icon-btn" data-act="back-from-history" aria-label="رجوع">${UI.back}</button><h2 style="font-size:22px">سجل المباريات</h2>
+    ${H.length ? `<button class="btn btn-ghost" style="min-height:40px;padding:0 14px;font-size:14px;${confirmClear?'background:var(--danger);color:#fff':''}" data-act="clear">${confirmClear?'متأكد؟ امسح الكل':'مسح'}</button>` : '<span></span>'}</div>
+  <div class="h-list" style="max-width:760px;margin:0 auto">
+    ${H.length ? H.map(h=>`<div class="h-item">
+      <div class="meta"><span>${fmtDate(h.date)}</span><span>${h.rounds} جولة · إلى ${h.target} · ${fmtDur(h.duration)}</span></div>
+      <div class="h-match">
+        <div class="h-team ${h.winner===0?'':'lost'}">${badge(h.teams[0],'sm')}<b>${esc(h.teams[0].name)}</b></div>
+        <div class="h-score">${h.teams[0].score} – ${h.teams[1].score}</div>
+        <div class="h-team ${h.winner===1?'':'lost'}">${badge(h.teams[1],'sm')}<b>${esc(h.teams[1].name)}</b></div>
+      </div></div>`).join('')
+    : `<div class="panel"><p class="empty">السجل فارغ. كل مباراة تخلص تنحفظ هنا تلقائياً.</p></div>`}
+  </div>`;
+}
+let historyReturn = 'home';
+
+/* ================= events ================= */
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-act],[data-name],[data-icon],[data-color],[data-target]');
+  if (!b || b.disabled) return;
+  audio();
+  if (b.dataset.name !== undefined){ const t = draft.teams[step]; t.name = b.dataset.name; $('#f-name').value = t.name; $('#pv-name').textContent = t.name; document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('on', c===b)); blip(); return; }
+  if (b.dataset.icon){ draft.teams[step].icon = b.dataset.icon; renderSetup(); $('#pv .badge').classList.add('pop'); clack(); return; }
+  if (b.dataset.color){ draft.teams[step].color = b.dataset.color; renderSetup(); $('#pv .badge').classList.add('pop'); blip(); return; }
+  if (b.dataset.target){ draft.target = +b.dataset.target; draft.custom=''; $('#f-custom').value=''; document.querySelectorAll('.target').forEach(x=>x.classList.toggle('on', x===b)); blip(); return; }
+  const act = b.dataset.act;
+  switch(act){
+    case 'new': closeWin(); newDraft(); step = 0; renderSetup(); show('setup'); break;
+    case 'resume': renderGame(); show('game'); break;
+    case 'rematch': rematch(); break;
+    case 'history': historyReturn = current; confirmClear = false; renderHistory(); show('history'); break;
+    case 'back-from-history': if (historyReturn==='game' && store.match){ renderGame(); show('game'); } else { renderHome(); show('home'); } break;
+    case 'home': closeWin(); renderHome(); show('home'); break;
+    case 'rand-name': { const o = draft.teams[1-step].name; const n = shuffle(NAMES.filter(x=>x!==o && x!==draft.teams[step].name))[0]; draft.teams[step].name = n; renderSetup(); $('#pv .badge').classList.add('pop'); blip(); break; }
+    case 'next': { const er = validateTeam(step); if (er){ $('#err').textContent = er; buzz([30,40,30]); return; } step++; renderSetup(); window.scrollTo({top:0}); clack(); break; }
+    case 'prev': step--; renderSetup(); window.scrollTo({top:0}); break;
+    case 'start': { if (draft.custom && +draft.custom < 10){ $('#err').textContent = 'الرقم الخاص لازم يكون 10 أو أكثر'; return; } startMatch(false); break; }
+    case 'add': openSheet(+b.dataset.team); break;
+    case 'seg': sheetTeam = +b.dataset.team; paintSheet(); break;
+    case 'quick': sheetVal = String(Math.min(999, (+sheetVal||0) + +b.dataset.v)); paintSheet(); buzz(8); break;
+    case 'key': sheetKey(b.dataset.k); break;
+    case 'commit': commitSheet(); break;
+    case 'close-sheet': closeSheet(); break;
+    case 'undo': undo(); break;
+    case 'ask-del': { const li = b.closest('.log-item'); const i = +b.dataset.i;
+      li.classList.add('confirm'); b.parentElement.innerHTML = `<span class="confirm-row"><button class="yes" data-act="do-del" data-i="${i}">احذف</button><button class="no" data-act="no-del">لا</button></span>`; break; }
+    case 'do-del': deleteRound(+b.dataset.i); break;
+    case 'no-del': $('#log').innerHTML = logHTML(); break;
+    case 'next-starter': { const M = store.match; M.starter = (M.starter+1)%4; save(); const st = playerOrder(M.teams)[M.starter]; $('#st-name').textContent = st.name; b.style.setProperty('--tc', col(M.teams[st.team].color)); blip(); break; }
+    case 'sound': store.sound = !store.sound; save(); b.setAttribute('aria-pressed', store.sound); toast(store.sound?'الصوت شغّال':'الصوت مطفي'); if (store.sound) blip(); break;
+    case 'share': shareResult(); break;
+    case 'close-win': closeWin(); break;
+    case 'clear': if (!confirmClear){ confirmClear = true; renderHistory(); setTimeout(()=>{ if (confirmClear && current==='history'){ confirmClear=false; renderHistory(); } }, 3500); } else { store.history = []; confirmClear = false; save(); renderHistory(); toast('انمسح السجل'); } break;
+  }
+});
+
+/* boot */
+renderHome(); show('home');
+})();
+</script>
+</body>
+</html>
